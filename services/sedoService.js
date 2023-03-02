@@ -95,7 +95,7 @@ const getDomainParkingSubIdReport = async (date) => {
       'password'      : process.env.SEDO_PASSWORD,
       'output_method' : 'xml',
       'final'         : false,
-      'date'          : date,
+      'date'          : date || '2023-03-01',
       'startfrom'     : 0,
       'results'       : 10000,
     });
@@ -293,5 +293,6 @@ async function updateSedoTodayDaily() {
 
 module.exports = {
   updateSedoDaily,
-  updateSedoTodayDaily
+  updateSedoTodayDaily,
+  getDomainParkingSubIdReport
 }

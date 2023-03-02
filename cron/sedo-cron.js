@@ -2,8 +2,10 @@ const {CronJob} = require('cron');
 const Rules = require('../constants/cron');
 const {
   updateSedoDaily,
-  updateSedoTodayDaily
+  updateSedoTodayDaily,
+  getDomainParkingSubIdReport
 } = require('../services/sedoService');
+
 const {updateSedo_Spreadsheet} = require('../controllers/spreadsheetController');
 const disableCron = process.env.DISABLE_CRON === 'true';
 
@@ -16,7 +18,10 @@ const updateSedoTodayDataDailyJob = new CronJob(
   Rules.SEDO_HOURLY,
   updateSedoTodayDaily,
 );
-
+const getSedoDataDailyJob = new CronJob(
+  Rules.SEDO_DAILY,
+  getDomainParkingSubIdReport,
+);
 const updatePostbackSheetJob = new CronJob(
   Rules.SEDO_REGULAR,
   updateSedo_Spreadsheet,
@@ -29,12 +34,14 @@ function initializeSedoCron() {
     updatePostbackSheetJob.start();
     updateSedoDataDailyJob.start();
     updateSedoTodayDataDailyJob.start();
+    getSedoDataDailyJob.start();
   }
 
   // Debug Code
   // updateSystem1Hourly().then(() => { console.log('SYSTEM1 HOURLY UPDATE DONE') });
   // updateSystem1Daily().then(() => { console.log('SYSTEM1 DAILY UPDATE DONE') });
   // updateSpreadsheet().then(() => { console.log('spreadsheet updated') });
+  getDomainParkingSubIdReport().then(()=>{console.log('****** Sedo Data ******')})
 }
 
 module.exports = {initializeSedoCron};
