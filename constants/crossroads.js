@@ -55,6 +55,25 @@ const CROSSROADSDATA_SHEET_VALUES = [
   'cr_rpc',
   'cr_camp_name',
 ]
+
+const CROSSROADS_TODAY_HOURLY_DATA_SHEET_VALUES = [
+  'spend_today',
+  'revenue_today',
+  'revenue_clicks_today',
+  'roi_today',
+  'spend_yesterday',
+  'revenue_yesterday',
+  'revenue_clicks_yesterday',
+  'roi_yesterday',
+  'spend_2_days_ago',
+  'revenue_2_days_ago',
+  'revenue_clicks_2_days_ago',
+  'roi_2_days_ago',
+  'spend_3_days_ago',
+  'revenue_3_days_ago',
+  'revenue_clicks_3_days_ago',
+  'roi_3_days_ago',
+]
 const CROSSROADS_ACCOUNTS = [
   {
     id: 'account-1',
@@ -106,6 +125,44 @@ const sheetsArr = [
     traffic_source: 'tiktok',
   },
 ]
+const todaySheetsArr = [
+  {
+    hour: -2,
+    spreadsheetId: '1bHmSnTCWRLO5kzMuzuZxc2MVcyaS-eVTtE0w0XisCbs',
+    sheetName: 'Campaign Today',
+    sheetNameByAdset:'Adset Today',
+    traffic_source: 'facebook',
+  },
+  {
+    hour: -2,
+    spreadsheetId: '1LXkbP4X-uUGl_Fk5AKciL0DvQSbFN_apJga-x3g0_t4',
+    sheetName: 'Campaign Today',
+    sheetNameByAdset:'Adset Today',
+    traffic_source: 'tiktok',
+  },
+    // {
+    //   hour: -2,  // testing
+    //   spreadsheetId: '1bHmSnTCWRLO5kzMuzuZxc2MVcyaS-eVTtE0w0XisCbs',
+    //   sheetName: 'Local Campaign Today',
+    //   sheetNameByAdset:'Local Adset Today',
+    //   traffic_source: 'facebook',
+    // },
+]
+const hourlySheetArr = [
+  {
+    spreadsheetId: '1PqFLxtWzj8N4BAeyL0G8GWOBcXhDUwzl_tCw-QkvtLE',
+    sheetName: 'Campaign',
+    sheetNameByAdset:'Adset',
+    traffic_source: 'facebook',
+  },
+    // {
+    //   hour: -2,  // testing
+    //   spreadsheetId: '1bHmSnTCWRLO5kzMuzuZxc2MVcyaS-eVTtE0w0XisCbs',
+    //   sheetName: 'Local Campaign Today',
+    //   sheetNameByAdset:'Local Adset Today',
+    //   traffic_source: 'facebook',
+    // },
+]
 module.exports = {
   CROSSROADS_URL,
   CROSSROADS_LABELS,
@@ -113,5 +170,8 @@ module.exports = {
   CROSSROADS_ACCOUNTS,
   CROSSROADS_SHEET_VALUES,
   CROSSROADSDATA_SHEET_VALUES,
-  sheetsArr
+  CROSSROADS_TODAY_HOURLY_DATA_SHEET_VALUES,
+  sheetsArr,
+  todaySheetsArr,
+  hourlySheetArr
 };

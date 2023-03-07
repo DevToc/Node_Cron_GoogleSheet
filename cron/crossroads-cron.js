@@ -2,16 +2,22 @@ const { CronJob } = require('cron');
 const { todayYMD, yesterdayYMD, dayBeforeYesterdayYMD, someDaysAgoYMD} = require('../common/day');
 const { updateCrossroadsData, getFinalInfo } = require('../services/crossroadsService');
 const Rules = require('../constants/cron');
-const { CROSSROADS_ACCOUNTS } = require('../constants/crossroads');
-const { updateCR_DaySpreadsheet } = require('../controllers/spreadsheetController');
+const { CROSSROADS_ACCOUNTS, todaySheetsArr, hourlySheetArr } = require('../constants/crossroads');
+const { updateCR_DaySpreadsheet, updateCR_TodaySpreadsheet, updateCR_HourlySpreadsheet } = require('../controllers/spreadsheetController');
 const { sheetsArr } = require('../constants/crossroads');
 
 const disableCron = process.env.DISABLE_CRON === 'true'
 
 const updateCR_Sheet = async () => {
-  for(let i=0;i<sheetsArr.length;i++) {
-    await updateCR_DaySpreadsheet(sheetsArr[i]);
-  }
+  sheetsArr.forEach(async (sheet) => {
+    await updateCR_DaySpreadsheet(sheet)
+  })
+  todaySheetsArr.forEach(async (sheet) => {
+    await updateCR_TodaySpreadsheet(sheet);
+  })
+  hourlySheetArr.forEach(async (sheet) => {
+    await updateCR_HourlySpreadsheet(sheet);
+  })
 }
 const crossroadsFinalDataCron = new CronJob(
   Rules.CR_DAILY,
@@ -27,6 +33,17 @@ const crossroadsFinalDataCron = new CronJob(
 
 const crossroadsAfterMidnight = new CronJob(
   Rules.AFTER_MIDNIGHT,
+  (async () => {
+    console.log(`Getting after midnight Crossroads data...`);
+    await Promise.all(CROSSROADS_ACCOUNTS.map((account) => {
+        return updateCrossroadsData(account, yesterdayYMD());
+    }));
+    updateCR_Sheet();
+  }),
+);
+
+const crossroadsFinalYesterday = new CronJob(
+  Rules.CR_DAILY2,
   (async () => {
     console.log(`Getting after midnight Crossroads data...`);
     await Promise.all(CROSSROADS_ACCOUNTS.map((account) => {
@@ -61,14 +78,16 @@ const crossroadsSixMinCron = new CronJob(
 const initializeCRCron = () => {
   (async () => {
 
-  //   // console.log(`Getting Crossroads data...`);
-  //   // await Promise.all(CROSSROADS_ACCOUNTS.map((account) => {
-  //   //   return updateCrossroadsData(account, someDaysAgoYMD(8));
-  //   // }))
+    // console.log(`Getting Crossroads data...`);
+    // await Promise.all(CROSSROADS_ACCOUNTS.map((account) => {
+    //   return updateCrossroadsData(account, someDaysAgoYMD(8));
+    // }))
 
-    // for(let i=0;i<sheetsArr.length;i++) {
-    //   await updateCR_DaySpreadsheet(sheetsArr[i]);
-    // }
+    hourlySheetArr.forEach(async (sheet) => {
+      await updateCR_HourlySpreadsheet(sheet);
+    })
+    console.log(`Done Updating Today's Crossroads data...`);
+
 
   })();
 
@@ -76,6 +95,7 @@ const initializeCRCron = () => {
     crossroadsFinalDataCron.start();
     crossroadsSixMinCron.start();
     crossroadsAfterMidnight.start();
+    crossroadsFinalYesterday.start();
     crossroadsHourlyCron.start();
   }
 };
