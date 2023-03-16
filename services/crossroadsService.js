@@ -60,6 +60,7 @@ async function prepareBulkData(key, date, fields) {
     console.error('prepare request error', err.response);
     throw err;
   });
+
   return data;
 }
 
@@ -125,6 +126,7 @@ function waitForBulkData(key, requestId) {
 
 async function getBulkData(url) {
   const { data } = await axios.get(url);
+
   return data;
 }
 
@@ -451,17 +453,18 @@ function removeAccountStats(account, request_date) {
 
 async function updateCrossroadsData(account, request_date) {
   await updateCrossroadsCampaigns(account.key);
+
   const available_fields = await getAvailableFields(account.key);
   const fields = available_fields.join(',');
   const { request_id } = await prepareBulkData(account.key, request_date, fields);
-
+  // console.log("")
   const file_url = await waitForBulkData(account.key, request_id);
   // const file_url = 'https://s3-us-west-2.amazonaws.com/cr-api-v2-bulk-data/233afddf-2503-41a6-8d50-5031eb417d1e.json'
 
   console.log('file_url', file_url);
 
   const crossroadsData = await getBulkData(file_url);
-
+ 
   const totals = processTotals(crossroadsData);
   console.log('DIRECTLY FROM AWS', totals);
 

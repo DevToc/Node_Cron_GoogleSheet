@@ -90,7 +90,7 @@ function crossroadsCampaignsByHour(startDate, endDate, traffic_source, groupBy, 
       MAX(cr.${groupByName}) as ${groupByName},
       SUM(cr.total_revenue) as revenue,
       CAST(SUM(cr.total_revenue_clicks) AS INTEGER) as revenue_clicks
-      FROM crossroads cr
+      FROM crossroads as cr
       WHERE cr.date > '${startDate}' AND cr.date <= '${endDate}' AND cr.traffic_source = '${traffic_source}'
       GROUP BY cr.${groupBy}, cr.hour
     )

@@ -335,6 +335,7 @@ async function updateCR_TodaySpreadsheet(sheetData) {
   const {spreadsheetId, sheetName, sheetNameByAdset, traffic_source, hour} = sheetData;
 
   let campData = await crossroadsCampaignsForToday(yesterdayYMD(), todayYMD(), traffic_source, todayHH(hour));
+  console.log(campData)
   campData = calculateValuesForSpreadsheet(campData.rows, ['campaign_id','campaign_name', ...CROSSROADSDATA_SHEET_VALUES]);
   await spreadsheets.updateSpreadsheet(campData, {spreadsheetId, sheetName});
 
@@ -363,12 +364,15 @@ async function updateCR_HourlySpreadsheet(sheetData) {
       suffix: '_today'
     },
   ];
-  let allCampData = {};
+
+  let allCampData = {}
   await Promise.all(daysArr.map(async (item) => {
     let campData = await crossroadsCampaignsByHour(someDaysAgoYMD(item.day), someDaysAgoYMD(item.day - 1), traffic_source, 'campaign_id', 'campaign_name', item.suffix);
+    
+    // console.log(campData)
     campData = calculateValuesForSpreadsheet(campData.rows, ['campaign_id','campaign_name', 'hour', ...CROSSROADS_TODAY_HOURLY_DATA_SHEET_VALUES]);
     if(!allCampData.rows) {
-      allCampData.rows = campData.rows;
+      allCampData.rows = campData.rows; 
     }
     allCampData.columns = campData.columns;
     allCampData.rows = _.merge(allCampData.rows, campData.rows);

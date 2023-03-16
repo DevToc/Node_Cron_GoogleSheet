@@ -83,6 +83,7 @@ async function updateSheetValues(spreadsheetId, values, options) {
 }
 
 async function updateSpreadsheet(data, options) {
+
   const { spreadsheetId, sheetName, excludedFields = [] } = options
   const now = todayYMDHM();
   // Get column names
